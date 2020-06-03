@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hqyj.SpringBootDemo.modules.test.vo.ApplicationTest;
 
 @Controller
+@RequestMapping("/test")
 public class TestController {
 
 	@Value("${server.port}")
@@ -30,7 +31,7 @@ public class TestController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
-	@RequestMapping("/test/log")
+	@RequestMapping("/log")
 	@ResponseBody
 	public String logTest() {
 		LOGGER.trace("This is trace log");
@@ -43,7 +44,7 @@ public class TestController {
 	}
 	
 	
-	@RequestMapping("/test/config")
+	@RequestMapping("/config")
 	@ResponseBody
 	public String configInfo() {
 
