@@ -13,7 +13,7 @@ public class SpringBootDemo200301Application extends SpringBootServletInitialize
 	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		// TODO Auto-generated method stub
+		
 		return builder.sources(SpringBootDemo200301Application.class);
 	}
 
