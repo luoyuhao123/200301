@@ -88,4 +88,12 @@ public class CityController {
 		return cityService.deleteCity(cityId);
 	}
 	
+	/**
+	 * http://127.0.0.1/api/redis/cities/522 ---- get
+	 */
+	@RequestMapping("/redis/cities/{countryId}")
+	public Object migrateCitiesByCountryId(@PathVariable int countryId) {
+		return cityService.migrateCitiesByCountryId(countryId);
+	}
+	
 }
