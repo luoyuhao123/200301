@@ -1,14 +1,18 @@
 package com.hqyj.SpringBootDemo.modules.test.service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hqyj.SpringBootDemo.modules.common.vo.Result;
+import com.hqyj.SpringBootDemo.modules.common.vo.Result.ResultStatus;
 import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 import com.hqyj.SpringBootDemo.modules.test.dao.CityDao;
 import com.hqyj.SpringBootDemo.modules.test.entity.City;
@@ -47,6 +51,28 @@ public class CityServiceImpl implements CityService{
 				Optional.ofNullable(cityDao.getCitiesBySearchVo(searchVo))
 				.orElse(Collections.emptyList()));
 	}
+
+	@Override
+	public Result<City> insetCity(City city) {
+		city.setDateCreated(new Date());
+		cityDao.insetCity(city);
+		return new Result<City>(ResultStatus.SUCCESS.status, "Insert success", city);
+	}
+
+	@Override
+	@Transactional
+	public Result<City> updateCity(City city) {
+		cityDao.updateCity(city);
+		return new Result<City>(ResultStatus.SUCCESS.status, "Update success", city);
+	}
+
+	@Override
+	public Result<Object> deleteCity(int cityId) {
+		cityDao.deleteCity(cityId);
+		return new Result<Object>(ResultStatus.SUCCESS.status, "Delete success.");
+	}
+
+
 	
 	
 	
