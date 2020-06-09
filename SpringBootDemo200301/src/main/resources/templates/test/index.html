@@ -1,6 +1,24 @@
 <section>
 	Hello world! This is test module index.
 
+	<h3>file upload</h3>
+	<p th:text="${message}"></p>
+
+	<p>ä¸Šä¼ æ–‡ä»¶ï¼Œä½¿ç”¨multipart/form-dataç±»åž‹</p>
+	<form action="/test/file" method="post" enctype="multipart/form-data">
+		<input type="file" name="file">
+		<button type="submit">ä¸Šä¼ </button>
+	</form>
+	<br>
+
+	<form action="/test/files" method="post" enctype="multipart/form-data">
+		<input type="file" name="files">
+		<input type="file" name="files">
+		<button type="submit">ä¸Šä¼ </button>
+	</form>
+	<p>==================================================================</p>
+
+
 	<h3>th:text</h3>
 	<h1 th:text="${thymeleafTitle}">this is thymeleaf title</h1>
 	<p th:text="${thymeleafTitle}">this is the thymeleaf ti-tle</p>
@@ -20,7 +38,7 @@
 	<h3>url,href</h3>
 	<a th:href="@{http://www.baidu.com}" target="_blank">Click it to turn to baidu</a><br>
 	<a th:href="${baiduUrl}" target="_blank">Click it to turn to Shop beauty</a><br>
-    <!-- ·â×°¶¯Ì¬url¡¢url²éÑ¯²ÎÊý -->
+    <!-- ï¿½ï¿½×°ï¿½ï¿½Ì¬urlï¿½ï¿½urlï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ -->
     <a th:href="@{'/test/index/'+${city.cityId}}" th:text="${city.cityName}"></a>
 	<a th:href="@{/test/index(pageSize=${city.cityId},currentPage='1')}" th:text="${city.cityName}"></a>
 	<img th:src="@{${shopLogo}}"/>
