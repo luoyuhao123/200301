@@ -10,7 +10,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.hqyj.SpringBootDemo.filter.ParameterFilter;
@@ -20,6 +22,22 @@ import com.hqyj.SpringBootDemo.interceptor.UrlInterceptor;
 @AutoConfigureAfter({WebMvcAutoConfiguration.class})
 public class WebMvcConfig implements WebMvcConfigurer{
 
+
+	@Autowired
+	private ResourceConfigBean resourceConfigBean;
+	
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		String systemName = System.getProperty("os.name");
+		if (systemName.toLowerCase().startsWith("win")) {
+			registry.addResourceHandler(resourceConfigBean.getResourcePathPattern())
+				.addResourceLocations(ResourceUtils.FILE_URL_PREFIX + resourceConfigBean.getLocalPathForWindow());
+		} else  {
+			registry.addResourceHandler(resourceConfigBean.getResourcePathPattern())
+				.addResourceLocations(ResourceUtils.FILE_URL_PREFIX + resourceConfigBean.getLocalPathForLinux());
+		}
+	}
 	@Autowired
 	private UrlInterceptor urlInterceptor;
 	
