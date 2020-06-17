@@ -10,39 +10,56 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.hqyj.SpringBootDemo.modules.account.entity.Role;
-
-import io.lettuce.core.dynamic.annotation.Param;
+import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 
 @Mapper
 public interface RoleDao {
-
-	//查找ID
-	@Select("select * from role where roel_id = #{roleId}")
-	List<Role> getRoleById(int roleId);
-	
-	//查找名字
-	@Select("select * from role where role_name = #{roleName}")
-	List<Role> getRoleByName(@Param("roleName") String roleName);
-	
-	//增添数据
-	@Insert("insert into role (role_name) values(#{roleName})")
-	@Options(useGeneratedKeys = true,keyColumn = "role_id",keyProperty = "role_id")
-	void insertRole(Role role);
-	
-	//删除数据
-	@Delete("delete from role where role_id = #{roleId}")
-	void deleteRole (int roleId);
-	
-	//修改数据
-	@Update("update roel set role_name=#{roleName} where role_id = #{roleId}")
-	void updateRole(Role role);
-	
-	//查找role
 	@Select("select * from role")
 	List<Role> getRoles();
+	
+	@Insert("insert into role (role_name) values (#{roleName})")
+	@Options(useGeneratedKeys = true, keyColumn = "role_id", keyProperty = "roleId")
+	void insertRole(Role role);
 	
 	@Select("select * from role role left join user_role userRole "
 			+ "on role.role_id = userRole.role_id where userRole.user_id = #{userId}")
 	List<Role> getRolesByUserId(int userId);
-	
+
+	@Insert("insert role(role_name) value(#{roleName})")
+	@Options(useGeneratedKeys=true, keyProperty="roleId", keyColumn="role_id")
+	void addRole(Role role);
+
+	@Update("update role set role_name = #{roleName} where role_id = #{roleId}")
+	void updateRole(Role role);
+
+	@Delete("delete from role where role_id = #{roleId}")
+	void deleteRole(int roleId);
+
+	@Select("<script>" + 
+			"select * from role "
+			+ "<where> "
+			+ "<if test='keyWord != \"\" and keyWord != null'>"
+			+ "and role_name like '%${keyWord}%' "
+			+ "</if>"
+			+ "</where>"
+			+ "<choose>"
+			+ "<when test='orderBy != \"\" and orderBy != null'>"
+			+ "order by ${orderBy} ${sort}"
+			+ "</when>"
+			+ "<otherwise>"
+			+ "order by role_id desc"
+			+ "</otherwise>"
+			+ "</choose>"
+			+ "</script>")
+	List<Role> getRolesBySearchVo(SearchVo searchVo);
+
+	@Select("select * from role role left join role_resource roleResource "
+			+ "on role.role_id = roleResource.role_id where roleResource.resource_id = #{resourceId}")
+	List<Role> getRolesByResourceId(int resourceId);
+
+	@Select("select * from role where role_id=#{roleId}")
+	Role getRoleById(int roleId);
+
+	@Select("select * from role where role_name = #{roleName} limit 1")
+	Role getRoleByRoleName(String roleName);
 }

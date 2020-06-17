@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -38,29 +37,19 @@ public class UserController {
 		return userService.getUsersBySearchVo(searchVo);
 	}
 	
-	
-	
-	/**
-	 * 查找控制器
-	 * 127.0.0.1/api/user?userName=Tom&password=456 -----get
-	 */
-	@RequestMapping("/user")
-	public User getUserByUserName(@RequestParam String userName ){
-		return userService.getUserByUserName(userName);
-	}
 	/**
 	 * 添加控制器
 	 * 127.0.0.1/api/user -----post
 	 */
 	@PostMapping(value = "/user",consumes = "application/json")
 	public Result<User> insertUser(@RequestBody User user) {
-		return userService.insertUser(user);
+		return userService.editUser(user);
 	}
 	/**
 	 * 删除控制器
-	 * 127.0.0.1/api/users/  ------delete
+	 * 127.0.0.1/api/user/5  ------delete
 	 */
-	@DeleteMapping("/users/{userId}")
+	@DeleteMapping("/user/{userId}")
 	public Result<Object> deleteUser(@PathVariable int userId) {
 		return userService.deleteUser(userId);
 	}
@@ -68,9 +57,9 @@ public class UserController {
 	 * 修改控制器
 	 * 127.0.0.1/api/user ------put
 	 */
-	@PutMapping(value = "user",consumes = "application/x-www-form-urlencoded")
+	@PutMapping(value = "user",consumes = "application/json")
 	public Result<User> updateUser(@ModelAttribute User user) {
-		return userService.updateUser(user);
+		return userService.editUser(user);
 	}
 	/**
 	 * 127.0.0.1/api/user/3

@@ -12,15 +12,12 @@ public interface UserService {
 	
 	//查名字接口
     User getUserByUserName(String userName);
-    //增加数据接口
-    Result<User> insertUser(User user);
     //删除数据接口
     Result<Object> deleteUser(int userId);
-    //修改数据接口
-    Result<User> updateUser(User user);
     
 	PageInfo<User> getUsersBySearchVo(SearchVo searchVo);
 	//查ID接口
 	User getUserByUserId(int userId);
     
+	Result<User> editUser(User user);
 }

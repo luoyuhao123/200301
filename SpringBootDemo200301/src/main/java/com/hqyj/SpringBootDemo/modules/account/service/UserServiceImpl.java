@@ -1,7 +1,6 @@
 package com.hqyj.SpringBootDemo.modules.account.service;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,55 +34,12 @@ public class UserServiceImpl implements UserService{
 	public User getUserByUserName(String userName) {
 		return userDao.getUserByUserName(userName);
 	}
-    //增加数据方法
-	@Override
-	@Transactional
-	public Result<User> insertUser(User user) {
-		User userTemp = getUserByUserName(user.getUserName());
-		
-		if(userTemp!=null) {
-			return new Result<User>(ResultStatus.FAILD.status, "User name is repeat.");
-		}
-		user.setCreateDate(new Date());
-		user.setPassword(MD5Util.getMD5(user.getPassword()));
-		
-		user.setCreateDate(new Date());
-		userDao.insertUser(user);
-		userRoleDao.deleteRolesByUserId(user.getUserId());
-		List<Role> roles = user.getRoles();
-		if (roles != null && roles.size() > 0) {
-			for (Role role : roles) {
-				userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
-			}
-		}
-		return new Result<User>(ResultStatus.SUCCESS.status,"Insert success",user);
-	}
     //删除数据方法
 	@Override
 	public Result<Object> deleteUser(int userId) {
 		userDao.deleteUser(userId);
-		userRoleDao.deleteRolesByUserId(userId);
+		userRoleDao.deletUserRoleByUserId(userId);
 		return new Result<Object>(ResultStatus.SUCCESS.status,"Delete success");
-	}
-	//修改数据方法
-	@Override
-	public Result<User> updateUser(User user) {
-		User userTemp = getUserByUserName(user.getUserName());
-		if (userTemp != null) {
-			return new Result<User>(ResultStatus.FAILD.status, "User name is repeat.");
-		}
-
-		userDao.updateUser(user);
-
-		userRoleDao.deleteRolesByUserId(user.getUserId());
-		List<Role> roles = user.getRoles();
-		if (roles != null && roles.size() > 0) {
-			for (Role role : roles) {
-				userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
-			}
-		}
-
-		return new Result<User>(ResultStatus.SUCCESS.status, "Update success.", user);
 	}
 
 	
@@ -91,7 +47,7 @@ public class UserServiceImpl implements UserService{
 	public Result<User> login(User user) {
 		User userTemp = userDao.getUserByUserName(user.getUserName());
 		if(userTemp == null || !userTemp.getPassword().equals(MD5Util.getMD5(user.getPassword()))) {
-			return new Result<User>(ResultStatus.FAILD.status,"User name or password error.");
+			return new Result<User>(ResultStatus.FAILED.status,"User name or password error.");
 		}
 		return new Result<User>(ResultStatus.SUCCESS.status,"Login success",userTemp);
 	}
@@ -107,5 +63,29 @@ public class UserServiceImpl implements UserService{
 	public User getUserByUserId(int userId) {
 		return userDao.getUserByUserId(userId);
 	}
-	
+	@Override
+	@Transactional
+	public Result<User> editUser(User user) {
+		User userTemp = getUserByUserName(user.getUserName());
+		if (userTemp != null && userTemp.getUserId()!=user.getUserId()) {
+			return new Result<User>(ResultStatus.FAILED.status, "User name is repeat.");
+		}
+		if(user.getUserId() > 0) {
+			userDao.updateUser(user);
+			userRoleDao.deletUserRoleByUserId(user.getUserId());
+		}else {
+			userDao.insertUser(user);
+		}
+
+
+		List<Role> roles = user.getRoles();
+		if (roles != null && roles.size() > 0) {
+			for (Role role : roles) {
+				userRoleDao.addUserRole(user.getUserId(), role.getRoleId());
+			}
+		}
+
+		return new Result<User>(ResultStatus.SUCCESS.status, "Edit success.", user);
+	}
+
 }

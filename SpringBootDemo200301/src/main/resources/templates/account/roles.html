@@ -1,7 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<!-- jquery.dataTables -->
-<link th:href="@{http://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css}" rel="stylesheet" >
-<!-- dataTables -->
+<!-- dataTables.bootstrap -->
 <link th:href="${'/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css'}" rel="stylesheet" />
 <!-- buttons.bootstrap -->
 <link th:href="${'/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css'}" rel="stylesheet" />
@@ -11,16 +8,26 @@
 <link th:href="${'/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css'}" rel="stylesheet" />
 <!-- responsive.bootstrap -->
 <link th:href="${'/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css'}" rel="stylesheet" />
-
 <div class="right_col" role="main">
 	<div class="">
 		<div class="page-title">
 			<div class="title_left">
 				<h3>
-					Account / Users <small>This is users list.</small>
+					Account / Roles <small>This is roles list.</small>
 				</h3>
 			</div>
 
+			<!-- <div class="title_right">
+				<div
+					class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search for...">
+						<span class="input-group-btn">
+							<button class="btn btn-secondary" type="button">Go!</button>
+						</span>
+					</div>
+				</div>
+			</div> -->
 		</div>
 
 		<div class="clearfix"></div>
@@ -28,11 +35,29 @@
 		<div class="row">
 			<div class="col-md-12 col-sm-12 ">
 				<div class="x_panel">
+					<!-- <div class="x_title">
+						<h2>
+							Default Example <small>Roles</small>
+						</h2>
+						<ul class="nav navbar-right panel_toolbox">
+							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+							</li>
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+								data-toggle="dropdown" role="button" aria-expanded="false"><i
+									class="fa fa-wrench"></i></a>
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+									<a class="dropdown-item" href="#">Settings 1</a> <a
+										class="dropdown-item" href="#">Settings 2</a>
+								</div></li>
+							<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+						</ul>
+						<div class="clearfix"></div>
+					</div> -->
 					<div class="x_title">
 						<ul class="nav panel_toolbox" style="margin-left:0; float: left;">
 							<li>
-								<button type="button" class="btn btn-primary" id="addUserBtn"
-									data-toggle="modal" data-target="#userAddModal">新    增</button>
+								<button type="button" class="btn btn-primary" id="addRoleBtn"
+									data-toggle="modal" data-target="#roleAddModal">新    增</button>
 							</li>
 						</ul>
 						<ul class="nav navbar-right panel_toolbox">
@@ -60,10 +85,8 @@
 										style="width: 100%">
 										<thead>
 											<tr>
-												<th>User Id</th>
-												<th>User Name</th>
-												<th>Password</th>
-												<th>Create Date</th>
+												<th>Role Id</th>
+												<th>Role Name</th>
 												<th>Operation</th>
 											</tr>
 										</thead>
@@ -79,8 +102,8 @@
 	</div>
 </div>
 
-<div th:replace="account/userAdd :: userAdd"></div>
-<div th:replace="account/userEdit :: userEdit"></div>
+<div th:replace="account/roleAdd :: roleAdd"></div>
+<div th:replace="account/roleEdit :: roleEdit"></div>
 
 <!-- jquery.dataTables -->
 <script th:src="${'/vendors/datatables.net/js/jquery.dataTables.min.js'}" type="text/javascript"></script>
@@ -88,7 +111,6 @@
 <script th:src="${'/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js'}" type="text/javascript"></script>
 <!-- dataTables.buttons -->
 <script th:src="${'/vendors/datatables.net-buttons/js/dataTables.buttons.min.js'}" type="text/javascript"></script>
-<!-- dataTables.buttons -->
 <script th:src="${'/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js'}" type="text/javascript"></script>
 <script th:src="${'/vendors/datatables.net-buttons/js/buttons.flash.min.js'}" type="text/javascript"></script>
 <script th:src="${'/vendors/datatables.net-buttons/js/buttons.html5.min.js'}" type="text/javascript"></script>
@@ -101,32 +123,33 @@
 <script th:src="${'/vendors/datatables.net-responsive/js/dataTables.responsive.min.js'}" type="text/javascript"></script>
 <script th:src="${'/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js'}" type="text/javascript"></script>
 <!-- scroller -->
-<script th:src="${'/vendors/datatables.net-scroller/js/dataTables.scroller.min.js'}" type="text/javascript"></script>
+<!-- <script th:src="${'/vendors/datatables.net-scroller/js/dataTables.scroller.min.js'}" type="text/javascript"></script> -->
 
 <script type="text/javascript">
+var DEFAULT_PAGE_SIZE = 5;
 
+// 加载页面时，需要执行的 js 代码
 $(document).ready(function() {
 	initTable(DEFAULT_PAGE_SIZE);
 
-	$("#addUserBtn").bind("click", function() {
-		initUserAdd();
+	$("#addRoleBtn").bind("click", function() {
+		initRoleAdd();
 	});
 
-	$("#userAddBtn").bind("click", function() {
-		insertUser();
+	$("#roleAddBtn").bind("click", function() {
+		insertRole();
 	});
-	$("#userEditBtn").bind("click", function() {
-		updateUser();
+
+	$("#roleEditBtn").bind("click", function() {
+		updateRole();
 	});
-	
 });
 
-//删除
-function deleteUser(userId) {
+function deleteRole(roleId) {
 	bootbox.confirm("Are you sure?", function(result) {
 		if(result) {
 			$.ajax({
-				url : "/api/user/" + userId,
+				url : "/api/role/" + roleId,
 				type : "delete",
 				contentType: "application/json",
 				success : function (data) {
@@ -144,26 +167,17 @@ function deleteUser(userId) {
 	});
 }
 
-//修改 user
-function updateUser() {
-	var user = {};
-	user.userName = $("#userNameForEditPage").val();
-	user.userId = $("#userIdForEditPage").val();
-	var roles = new Array();
-	$.each($("input[name='roleForEditPage']"), function(){
-		if(this.checked){
-			var role = {};
-			role.roleId = $(this).val();
-			roles.push(role);
-		}
-	});
-	user.roles = roles;
+//修改 role
+function updateRole() {
+	var role = {};
+	role.roleName = $("#roleNameForEditPage").val();
+	role.roleId = $("#roleIdForEditPage").val();
 
 	$.ajax({
-		url : "/api/user",
+		url : "/api/role",
 		type : "put",
 		contentType: "application/json",
-		data : JSON.stringify(user),
+		data : JSON.stringify(role),
 		success : function (data) {
 			if (data.status == 200) {
 				initTable(DEFAULT_PAGE_SIZE);
@@ -178,20 +192,14 @@ function updateUser() {
 }
 
 //初始化编辑页面
-function initEditModal(userId) {
-	initRoles("rolesForEditPage", "roleForEditPage");
-
+function initEditModal(roleId) {
 	$.ajax({
-		url : "/api/user/" + userId,
+		url : "/api/role/" + roleId,
 		type : "get",
 		contentType: "application/json",
 		success : function (rs) {
-			$("#userIdForEditPage").val(rs.userId);
-			$("#userNameForEditPage").val(rs.userName);
-			$.each(rs.roles, function(i, item){
-				$("input[name='roleForEditPage'][value=" + item.roleId + "]")
-					.attr("checked","checked");
-			});
+			$("#roleIdForEditPage").val(rs.roleId);
+			$("#roleNameForEditPage").val(rs.roleName);
 		},
 		error : function (data) {
 			layer.alert(data.responseText, {icon: 0});
@@ -199,27 +207,16 @@ function initEditModal(userId) {
 	});
 }
 
-
-//添加user
-function insertUser() {
-	var user = {};
-	user.userName = $("#userNameForAddPage").val();
-	user.password = $("#passwordForAddPage").val();
-	var roles = new Array();
-	$.each($("input[name='roleForAddPage']"), function(){
-		if(this.checked){
-			var role = {};
-			role.roleId = $(this).val();
-			roles.push(role);
-		}
-	});
-	user.roles = roles;
+//添加role
+function insertRole() {
+	var role = {};
+	role.roleName = $("#roleNameForAddPage").val();
 
 	$.ajax({
-		url : "/api/user/",
+		url : "/api/role",
 		type : "post",
 		contentType: "application/json",
-		data : JSON.stringify(user),
+		data : JSON.stringify(role),
 		success : function (data) {
 			if (data.status == 200) {
 				initTable(DEFAULT_PAGE_SIZE);
@@ -233,12 +230,9 @@ function insertUser() {
 	});
 }
 
-function initUserAdd() {
-	$("#userNameForAddPage").val("");
-	$("#passwordForAddPage").val("");
-	initRoles("rolesForAddPage", "roleForAddPage");
+function initRoleAdd() {
+	$("#roleNameForAddPage").val("");
 }
-
 
 function initTable(pageSize) {
 	$('#datatable').DataTable({
@@ -258,7 +252,7 @@ function initTable(pageSize) {
 			var columIndex = data.order[0].column;
 			var sort = data.order[0].dir;
 			var orderBy = data.columns[columIndex].name;
-			pageSize = data.length == undefined ? pageSize : data.length;
+			pageSize = data.length == undefined  ? pageSize : data.length;
 
 			var searchVo = {};
 			searchVo.currentPage = (data.start / pageSize) + 1;
@@ -268,7 +262,7 @@ function initTable(pageSize) {
 			searchVo.keyWord = data.search.value;
 
 			$.ajax({
-				url : "/api/users",
+				url : "/api/roles",
 				type : "post",
 				contentType: "application/json",
 				data : JSON.stringify(searchVo),
@@ -294,8 +288,7 @@ function initTable(pageSize) {
 					var gearDatas = [];
 					for (var i = 0; i < rs.list.length; i++) {
 						//包装行数据
-						var rowData = new TData(rs.list[i].userId, rs.list[i].userName, 
-								rs.list[i].password, rs.list[i].createDate);
+						var rowData = new TData(rs.list[i].roleId, rs.list[i].roleName);
 						// 将行数据放到数组里
 						gearDatas.push(rowData);
 					}
@@ -310,26 +303,21 @@ function initTable(pageSize) {
 			});
 		},
 		"columns": [ //定义行数据字段
-			{data: 'userId', name: "user_id", sortable: true}, 
-			{data: 'userName', name: "user_name", sortable: true}, 
-			{data: 'password', name: "password", sortable: true}, 
-			{data: 'createDate', name: "create_date", sortable: true}, 
+			{data: 'roleId', name: "role_id", sortable: true}, 
+			{data: 'roleName', name: "role_name", sortable: true}, 
 			{data: 'operate', width: '80px', sortable: false}
 		]
 	});
 }
 
 //行数据结构
-function TData(userId, userName, password, createDate) {
-	this.userId = userId;
-	this.userName = userName;
-	this.password = password;
-	this.createDate = createDate;
+function TData(roleId, roleName) {
+	this.roleId = roleId;
+	this.roleName = roleName;
 	this.operate = function () {
-		return "<a href='#' class='btn_editcolor' data-toggle='modal' data-target='#userEditModal' " + 
-			"onclick='initEditModal(\"" + userId + "\")'>编辑</a>&nbsp;" + 
-			"<a href='javascript:void(0);' onclick='deleteUser(\"" + userId + "\")' class='btn_editcolor'>删除</a>";
+		return "<a href='#' class='btn_editcolor' data-toggle='modal' data-target='#roleEditModal' " + 
+			"onclick='initEditModal(\"" + roleId + "\")'>编辑</a>&nbsp;" + 
+			"<a href='javascript:void(0);' onclick='deleteRole(\"" + roleId + "\")' class='btn_editcolor'>删除</a>";
 	}
 }
-
-</script>
+</script> 
