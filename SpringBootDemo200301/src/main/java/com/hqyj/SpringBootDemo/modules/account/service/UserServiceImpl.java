@@ -155,6 +155,13 @@ public class UserServiceImpl implements UserService{
 
 		return new Result<User>(ResultStatus.SUCCESS.status, "Edit success.", user);
 	}
+	
+	@Override
+	public void logout() {
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+     		
+	}
 
 
 }
