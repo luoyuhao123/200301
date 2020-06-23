@@ -1,0 +1,99 @@
+一、选择题（共12小题，每小题2.5分，共30分）
+	以下不是spring boot优点的是 (D)
+		A．快速搭建项目
+		B．简化配置  
+		C．自动配置  
+		D．无需容器
+	Spring Boot配置，以下哪个优先级最高（A）
+		A、外置：xx.jar同目录下/config/application.properties；
+		B、外置：xx.jar同目录下/config/application.yml；
+		C、内置：src/main/resources/config；
+		D、内置：src/main/resources
+	以下log日志级别哪个最高（C）
+		A、DEBUG
+		B、INFO
+		C、WARN
+		D、ERROR
+	以下不是spring boot的核心注解的是 (B)
+		A.	@SpringBootConfiguration
+		B.	@EnableAutoConfiguration
+		C.	@ComponentScan
+		D.	@MapperScan
+	要使用springMVC的功能，以下哪个架包是必须加的 (D)
+		A．spring-boot-starter-jdbc  
+		B．spring-boot-starter-thymeleaf  
+		C．spring-boot-starter-web  
+		D．mybatis-spring-boot-starter
+	以下哪个注解不能加在类上 (B)
+		A.	@Controller
+		B.	@ResponseBody
+		C.	@RestController
+		D.	@RequestMapping
+	当控制层上有@RestController注解时，方法中返回一个字符串“<h1>Hello</h1>” 的结果是 (C)
+		A. 一级标题显示的Hello
+		B.	找不到Hello.html
+		C.	<h1>Hello</>
+		D.	Hello
+	SpringBoot项目中配置文件的格式 (C)
+		A．properties  
+		B．yml  
+		C．两者都可以
+	前台使用json参数格式，控制器consumer、参数使用的注解是（A）
+		A、application/josn ---- @RequestBody
+		B、application/josn ---- @ModelAttribute
+		C、application/x-www-form-urlencoded ---- @RequestBody
+		D、application/x-www-form-urlencoded ---- @ModelAttribute
+	@Pointcut("execution(public * com.thornBird.sbd.modules.*.controller.*.*(..))")，第三个*代表（C）
+		A、代表返回类型不限
+		B、代表module下所有子包
+		C、代表所有类
+		D、代表所有方法
+	Url匹配风格中/admin*，以下哪个匹配不正确（D）
+		A、/admin
+		B、/admin1
+		C、/admin123
+		D、/admin/1
+	Mybatis框架中，插入数据使用那个注解（B）
+		A、@Update
+		B、@Insert
+		C、@Select
+		D、@InsertMapping
+二、填空题（共5小题，每小题5分，共25分）
+	Java配置依赖的2个注解是____@Bean______，_____@Configuration______；
+	修改tomcat端口号为9090应该怎么写？_____server.port = 9090_______；
+	自定义拦截器需要实现____Interceptor____接口；
+	过滤器需要使用____@WebFilter_____注解；
+	上传文件，使用__multipart/form-data__接收文件对象，consumer使用__application/json___；
+三、问答题（每题5分）
+	简述Spring
+	Spring是开放源代码的J2EE应用程序框架，是针对bean生命周期进行管理的轻量级容器。提供了功能强大的AOP，IOC。其主要包含了7个部分，
+	spring Core，spring MVC, spring DAO, spring Context, Spring WEB, spring web MVC和spring ORM。
+	简述Git使用流程，写几个常用Git命令；
+	先在本地建立本地仓库，然后找到远程仓库，并找到需要的文件，然后复制网址。
+	在本地仓库文件夹打开CMD命令框，输入命令，可以提交本地的文件到远程仓库，也可以下载远程仓库的文件。
+	命令：git clone + 网址 , git push origin master
+	简述敏捷开发、Scrum流程；
+	分为前端和后端，前端是寻找网上优秀模板，拆解模板，找出需要的部分填入自己的开发项目。
+	后端是分模块开发。模块有公共模块common，过滤器Filter，自定义拦截器Interceptor，工具util，主要模块modules，
+	在modules里分层开发，有entity，dao，service，serviceImpl，controller层。
+	简述shiro两大功能实现流程；
+	首先引入JAR包，然后修改配置文件，建MyRealm,ShiroConfigjava文件。
+	身份验证：
+	输入登录名称和密码，获取subjec组件；包装令牌，令牌包含输入的名称和密码；然后MyRealm到身份验证，到获取用户名查询user
+	包装身份验证器，然后验证器与令牌比对，成功则登录，失败则抛出
+	资源授权：
+	访问相应的页面或控制器，若有shiro标签或注解，realm里包装资源验证器，然后与页面或控制器对比。
+四、编程题（共2小题，1题12分，2题13分，共25分）
+	访问控制层，将一个List装入requset中，再在页面上以表格的形式显示出来
+	请写出重定向到某个页面的代码
+	
+	@PostMapping(value = "/list",consumes = "application/json")
+	public List<list> gitById(){
+	    return "/";
+	}
+	
+	@PostMapping(value = "/list",consumes = "application/json")
+	public List<list> gitById(){
+	    return "redict:index";
+	}
+	
